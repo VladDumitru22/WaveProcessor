@@ -1,0 +1,11 @@
+bin/
+build/
+*.exe
+*.out
+
+.vscode/
+.idea/
+
+# Large audio files (keep only small samples)
+*.wav
+!samples/*.wav

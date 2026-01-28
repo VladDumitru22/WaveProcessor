@@ -32,9 +32,8 @@ int main() {
 
     // Data for the audio without the metadata from the WAV file
     int16_t *audioData = (int16_t *)malloc(header.subchunk2Size);
-
     if(audioData == NULL){
-        printf("Error: audioData is empty.\n");
+        printf("Error: Memory allocation failed.\n");
         return 1;
     }
 
@@ -45,9 +44,25 @@ int main() {
         printf("Sample[%d]: %d\n", i, audioData[i]);
     }
 
+    //A second space in memory to store the filtered result.
+    int16_t *outputData = (int16_t *)malloc(header.subchunk2Size);
+    if(outputData == NULL){
+        printf("Error: Memory allocation failed.\n");
+        return 1;
+    }
 
+    //FIR Filter logic
+    for(int i=2; i < totalSamples; i++){
+        int32_t sum = 0;
+        sum = ((audioData[i] + audioData[i-1] + audioData[i-2]) * 10922);
+        outputData[i] = (int16_t)(sum >> 15);
+    }
+    outputData[0] = audioData[0];
+    outputData[1] = audioData[1];
 
     fclose(fptr);
     free(audioData);
+    free(outputData);
+
     return 0;
 }

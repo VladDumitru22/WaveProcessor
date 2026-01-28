@@ -34,6 +34,7 @@ int main() {
     int16_t *audioData = (int16_t *)malloc(header.subchunk2Size);
     if(audioData == NULL){
         printf("Error: Memory allocation failed.\n");
+        free(audioData);
         return 1;
     }
 
@@ -48,6 +49,8 @@ int main() {
     int16_t *outputData = (int16_t *)malloc(header.subchunk2Size);
     if(outputData == NULL){
         printf("Error: Memory allocation failed.\n");
+        free(audioData);
+        free(outputData);
         return 1;
     }
 
@@ -60,7 +63,19 @@ int main() {
     outputData[0] = audioData[0];
     outputData[1] = audioData[1];
 
+    FILE *fptrOut = fopen("samples/Output_Mono_02.wav", "wb");
+    if(fptrOut == NULL){
+        printf("Error: Could not open file.\n");
+        free(audioData);
+        free(outputData);
+        return 1;
+    }
+
+    fwrite(&header, sizeof(WAVHeader), 1, fptrOut);
+    fwrite(outputData, header.bitsPerSample / 8, totalSamples, fptrOut);
+
     fclose(fptr);
+    fclose(fptrOut);
     free(audioData);
     free(outputData);
 

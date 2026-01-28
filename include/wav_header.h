@@ -4,9 +4,9 @@
 
 typedef struct WAVHeader {
     // RIFF Chunk Descriptor
-    char chunkID[5];
+    char chunkID[4];
     uint32_t chunkSize;
-    char format[5];
+    char format[4];
 
     // Fmt Sub-chunk
     char subchunk1ID[4];

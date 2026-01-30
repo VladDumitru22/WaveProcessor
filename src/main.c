@@ -64,7 +64,8 @@ int main(int argc, char *argv[]) {
     printf("\n--- WavProcessor Menu ---\n");
     printf("1. Low-Pass Filter\n");
     printf("2. High-Pass Filter\n");
-    printf("3. No filter\n");
+    printf("3. Apply Echo\n");
+    printf("4. No filter\n");
     printf("Select filter: ");
     if (scanf("%d", &choice) != 1) {
         printf("Invalid input! Please enter a number.\n");
@@ -84,6 +85,21 @@ int main(int argc, char *argv[]) {
         case 2:
             apply_high_pass(audioData, outputData, totalSamples, header.numChannels);
             break;
+        case 3: {
+            float delaySeconds, decay;
+            printf("Enter delay seconds: ");
+            if (scanf("%f", &delaySeconds) != 1) {
+                printf("Invalid gain! Please enter a decimal number.\n");
+                return 1;
+            }
+            printf("Enter decay: ");
+            if (scanf("%f", &decay) != 1) {
+                printf("Invalid gain! Please enter a decimal number.\n");
+                return 1;
+            }
+            apply_echo(audioData, outputData, totalSamples, header.sampleRate, header.numChannels, delaySeconds, decay);
+            break;
+        }
         default:
             memcpy(outputData, audioData, header.subchunk2Size);
             break;

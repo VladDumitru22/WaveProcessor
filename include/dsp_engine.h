@@ -9,4 +9,5 @@ void apply_high_pass(const int16_t* input, int16_t* output, uint32_t length, uin
 
 void apply_gain(int16_t* data, uint32_t length, float gain);
 
+void apply_echo(const int16_t* input, int16_t* output, uint32_t length, uint32_t sampleRate, uint16_t channels, float delaySeconds, float decay);
 #endif

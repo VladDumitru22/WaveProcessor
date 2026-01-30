@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <wav_header.h>
+#include <dsp_engine.h>
 
 int main() {
 
@@ -24,7 +25,7 @@ int main() {
     printf("Bits per sample: %u\n", header.bitsPerSample);
 
     // Total samples
-    int totalSamples = header.subchunk2Size / (header.bitsPerSample / 8);
+    uint32_t totalSamples = header.subchunk2Size / (header.bitsPerSample / 8);
     if((header.bitsPerSample / 8) * totalSamples !=  header.subchunk2Size){
         printf("Invalid format.\n");
         return 1;
@@ -55,13 +56,7 @@ int main() {
     }
 
     //FIR Filter logic
-    for(int i=2; i < totalSamples; i++){
-        int32_t sum = 0;
-        sum = ((audioData[i] + audioData[i-1] + audioData[i-2]) * 10922);
-        outputData[i] = (int16_t)(sum >> 15);
-    }
-    outputData[0] = audioData[0];
-    outputData[1] = audioData[1];
+    apply_low_pass(audioData, outputData, totalSamples);
 
     FILE *fptrOut = fopen("samples/Output_Mono_02.wav", "wb");
     if(fptrOut == NULL){

@@ -1,3 +1,6 @@
+#ifndef WAV_HEADER_H
+#define WAV_HEADER_H
+
 #include <stdint.h>
 
 #pragma pack(push, 1) //Remove padding in memory
@@ -25,3 +28,5 @@ typedef struct WAVHeader {
 } WAVHeader;
 
 #pragma pack(pop) //Get back to default padding
+
+#endif

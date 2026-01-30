@@ -5,9 +5,13 @@
 #include <wav_header.h>
 #include <dsp_engine.h>
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        printf("Usage: %s <input.wav> <output.wav>\n", argv[0]);
+        return 1;
+    }
 
-    FILE *fptr = fopen("samples/Sample_Mono_02.wav", "rb");
+    FILE *fptr = fopen(argv[1], "rb");
 
     if (fptr == NULL) {
         printf("Error: Could not open file.\n");
@@ -35,7 +39,6 @@ int main() {
     int16_t *audioData = (int16_t *)malloc(header.subchunk2Size);
     if(audioData == NULL){
         printf("Error: Memory allocation failed.\n");
-        free(audioData);
         return 1;
     }
 
@@ -55,13 +58,42 @@ int main() {
         return 1;
     }
 
+    int choice;
+    float userGain = 1.0f;
+
+    printf("\n--- WavProcessor Menu ---\n");
+    printf("1. Low-Pass Filter\n");
+    printf("2. High-Pass Filter\n");
+    printf("3. No filter\n");
+    printf("Select filter: ");
+    if (scanf("%d", &choice) != 1) {
+        printf("Invalid input! Please enter a number.\n");
+        return 1; 
+    }
+    printf("Enter gain: ");
+    if (scanf("%f", &userGain) != 1) {
+        printf("Invalid gain! Please enter a decimal number.\n");
+        return 1;
+    }
+
+    // Executăm alegerea
+    switch(choice) {
+        case 1:
+            apply_low_pass(audioData, outputData, totalSamples, header.numChannels);
+            break;
+        case 2:
+            apply_high_pass(audioData, outputData, totalSamples, header.numChannels);
+            break;
+        default:
+            memcpy(outputData, audioData, header.subchunk2Size);
+            break;
+    }
+
+    // Aplicăm gain-ul la final pe rezultatul filtrat
+    apply_gain(outputData, totalSamples, userGain);
     //FIR Filter logic
-    apply_low_pass(audioData, outputData, totalSamples, header.numChannels);
 
-    //Gain logic
-    apply_gain(outputData, totalSamples, 5.0);
-
-    FILE *fptrOut = fopen("samples/Output_Mono_02.wav", "wb");
+    FILE *fptrOut = fopen(argv[2], "wb");
     if(fptrOut == NULL){
         printf("Error: Could not open file.\n");
         free(audioData);

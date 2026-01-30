@@ -5,6 +5,8 @@
 
 void apply_low_pass(const int16_t* input, int16_t* output, uint32_t length, uint16_t channels);
 
+void apply_high_pass(const int16_t* input, int16_t* output, uint32_t length, uint16_t channels);
+
 void apply_gain(int16_t* data, uint32_t length, float gain);
 
 #endif

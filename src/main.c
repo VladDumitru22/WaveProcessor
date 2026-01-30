@@ -77,7 +77,6 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // Executăm alegerea
     switch(choice) {
         case 1:
             apply_low_pass(audioData, outputData, totalSamples, header.numChannels);
@@ -104,10 +103,7 @@ int main(int argc, char *argv[]) {
             memcpy(outputData, audioData, header.subchunk2Size);
             break;
     }
-
-    // Aplicăm gain-ul la final pe rezultatul filtrat
     apply_gain(outputData, totalSamples, userGain);
-    //FIR Filter logic
 
     FILE *fptrOut = fopen(argv[2], "wb");
     if(fptrOut == NULL){

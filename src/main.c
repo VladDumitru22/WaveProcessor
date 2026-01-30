@@ -58,6 +58,9 @@ int main() {
     //FIR Filter logic
     apply_low_pass(audioData, outputData, totalSamples);
 
+    //Gain logic
+    apply_gain(outputData, totalSamples, 5.0);
+
     FILE *fptrOut = fopen("samples/Output_Mono_02.wav", "wb");
     if(fptrOut == NULL){
         printf("Error: Could not open file.\n");

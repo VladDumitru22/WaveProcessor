@@ -56,7 +56,7 @@ int main() {
     }
 
     //FIR Filter logic
-    apply_low_pass(audioData, outputData, totalSamples);
+    apply_low_pass(audioData, outputData, totalSamples, header.numChannels);
 
     //Gain logic
     apply_gain(outputData, totalSamples, 5.0);
